@@ -18,21 +18,30 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.tasnim.chowdhury.kotlinweather.adapter.HourlyAdapter
 import com.tasnim.chowdhury.kotlinweather.databinding.ActivityMainBinding
 import com.tasnim.chowdhury.kotlinweather.repository.WeatherRepository
 import com.tasnim.chowdhury.kotlinweather.utils.apiKey
 import com.tasnim.chowdhury.kotlinweather.utils.unit
 import com.tasnim.chowdhury.kotlinweather.viewModel.WeatherViewModel
 import com.tasnim.chowdhury.kotlinweather.viewModel.WeatherViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val permissionId = 2
+    private lateinit var hourlyAdapter: HourlyAdapter
+    var lat = ""
+    var lon = ""
 
     private val weatherViewModel: WeatherViewModel by viewModels {
         WeatherViewModelFactory(
@@ -46,11 +55,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        binding.btnLocation.setOnClickListener {
-            getLocation()
-        }
+        getLocation()
 
+        initData()
+        setupAdapter()
         setupObserver()
+    }
+
+    private fun initData() {
+        binding.currentDateTime.text = getCurrentDate()
+    }
+
+    private fun getCurrentDate(): String{
+        val dateFormat = SimpleDateFormat("MMMM dd, yyy", Locale.US)
+        val currentDate = Date(System.currentTimeMillis())
+        return dateFormat.format(currentDate)
+    }
+
+    private fun setupAdapter() {
+        hourlyAdapter = HourlyAdapter()
+        binding.hourlyRv.adapter = hourlyAdapter
+        binding.hourlyRv.setHasFixedSize(false)
+        binding.hourlyRv.itemAnimator = DefaultItemAnimator()
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.hourlyRv.layoutManager = layoutManager
     }
 
     private fun setupObserver() {
@@ -58,7 +86,64 @@ class MainActivity : AppCompatActivity() {
             currentWeatherData.observe(this@MainActivity){
                 if (it != null){
                     Log.d("chkNullValueReturn", "${it.temp}")
+                    binding.currentTemp.text = "${it.temp.roundToInt()}°"
+                    binding.windSpeedTv.text = "${it.windSpeed}km/h"
+                    binding.cloudTv.text = "${it.clouds}%"
+                    binding.humidityTv.text = "${it.humidity}%"
+                    binding.currentCondition.text = "${it.weather[0].description}"
+
+                    for (i in it.weather){
+                        if (i.icon == "01d"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.clear_sky_day)
+                        }
+                        if (i.icon == "01n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.clear_sky_night)
+                        }
+                        if (i.icon == "02d"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.few_clouds_d)
+                        }
+                        if (i.icon == "02n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.few_clouds_n)
+                        }
+                        if (i.icon == "03d" || i.icon == "03n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.scater_clouds)
+                        }
+                        if (i.icon == "04d" || i.icon == "04n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.broken_clouds)
+                        }
+                        if (i.icon == "09d"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.rain_d)
+                        }
+                        if (i.icon == "09n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.rain_n)
+                        }
+                        if (i.icon == "10d"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.rain_d)
+                        }
+                        if (i.icon == "10n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.rain_n)
+                        }
+                        if (i.icon == "11d"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.thunder_d)
+                        }
+                        if (i.icon == "11n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.thunder_n)
+                        }
+                        if (i.icon == "13d" || i.icon == "13n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.snow)
+                        }
+                        if (i.icon == "50d"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.mist_d)
+                        }
+                        if (i.icon == "50n"){
+                            binding.currentWeatherIcon.setImageResource(R.drawable.mist_n)
+                        }
+                    }
                 }
+            }
+
+            hourlyWeatherData.observe(this@MainActivity){
+                hourlyAdapter.addHourlyItem(it)
             }
         }
     }
@@ -84,19 +169,17 @@ class MainActivity : AppCompatActivity() {
                         val geocoder = Geocoder(this, Locale.getDefault())
                         val list = geocoder.getFromLocation(location.latitude, location.longitude, 1)
                         Log.d("chkLocationD", "$list ---")
-                        binding.apply {
-                            tvLatitude.text = "Latitude\n${list?.get(0)?.latitude}"
-                            tvLongitude.text = "Longitude\n${list?.get(0)?.longitude}"
-                            tvCountryName.text = "Country Name\n${list?.get(0)?.countryName}"
-                            tvLocality.text = "Locality\n${list?.get(0)?.locality}"
-                            tvAddress.text = "Address\n${list?.get(0)?.getAddressLine(0)}"
-                        }
+                        lat = list?.get(0)?.latitude.toString()
+                        lon = list?.get(0)?.longitude.toString()
                         weatherViewModel.getWeatherData(
-                            lat = list?.get(0)?.latitude.toString(),
-                            lon = list?.get(0)?.longitude.toString(),
+                            lat = lat,
+                            lon = lon,
                             appId = apiKey,
                             unit = unit,
                         )
+                        binding.apply {
+                            areaName.text = list?.get(0)?.subLocality
+                        }
 
                     }
                 }

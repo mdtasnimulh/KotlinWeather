@@ -19,8 +19,8 @@ class WeatherViewModel(val repository: WeatherRepository) : ViewModel()  {
     private val _dailyWeatherData = MutableLiveData<List<WeatherModel.Daily?>?>()
     val dailyWeatherData: LiveData<List<WeatherModel.Daily?>?> = _dailyWeatherData
 
-    private val _hourlyWeatherData = MutableLiveData<List<WeatherModel.Hourly?>?>()
-    val hourlyWeatherData: LiveData<List<WeatherModel.Hourly?>?> = _hourlyWeatherData
+    private val _hourlyWeatherData = MutableLiveData<List<WeatherModel.Hourly>>()
+    val hourlyWeatherData: LiveData<List<WeatherModel.Hourly>> = _hourlyWeatherData
 
     private val _dataLoading = MutableLiveData<Boolean>().apply { value = false }
     val dataLoading: LiveData<Boolean> = _dataLoading
