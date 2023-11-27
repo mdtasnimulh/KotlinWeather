@@ -184,6 +184,7 @@ class MainActivity : AppCompatActivity() {
                     if (location != null) {
                         val geocoder = Geocoder(this, Locale.getDefault())
                         val list = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                        val place = list?.get(0)
                         Log.d("chkLocationD", "$list ---")
                         lat = list?.get(0)?.latitude.toString()
                         lon = list?.get(0)?.longitude.toString()
@@ -194,7 +195,11 @@ class MainActivity : AppCompatActivity() {
                             unit = unit,
                         )
                         binding.apply {
-                            areaName.text = list?.get(0)?.subLocality
+                            if (place?.subLocality.isNullOrEmpty()) {
+                                areaName.text = place?.thoroughfare
+                            } else {
+                                areaName.text = place?.subLocality
+                            }
                         }
 
                     }
