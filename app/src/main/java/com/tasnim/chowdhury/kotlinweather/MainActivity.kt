@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.tasnim.chowdhury.kotlinweather.adapter.DailyAdapter
 import com.tasnim.chowdhury.kotlinweather.adapter.HourlyAdapter
 import com.tasnim.chowdhury.kotlinweather.databinding.ActivityMainBinding
 import com.tasnim.chowdhury.kotlinweather.repository.WeatherRepository
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val permissionId = 2
     private lateinit var hourlyAdapter: HourlyAdapter
+    private lateinit var dailyAdapter: DailyAdapter
     var lat = ""
     var lon = ""
 
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         initData()
         setupAdapter()
+        setUpDailyAdapter()
         setupObserver()
     }
 
@@ -79,6 +82,15 @@ class MainActivity : AppCompatActivity() {
         binding.hourlyRv.itemAnimator = DefaultItemAnimator()
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.hourlyRv.layoutManager = layoutManager
+    }
+
+    private fun setUpDailyAdapter() {
+        dailyAdapter = DailyAdapter()
+        binding.dailyRv.adapter = dailyAdapter
+        binding.dailyRv.setHasFixedSize(false)
+        binding.dailyRv.itemAnimator = DefaultItemAnimator()
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.dailyRv.layoutManager = layoutManager
     }
 
     private fun setupObserver() {
@@ -144,6 +156,10 @@ class MainActivity : AppCompatActivity() {
 
             hourlyWeatherData.observe(this@MainActivity){
                 hourlyAdapter.addHourlyItem(it)
+            }
+
+            dailyWeatherData.observe(this@MainActivity){
+                dailyAdapter.addDailyItem(it)
             }
         }
     }

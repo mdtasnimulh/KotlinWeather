@@ -6,10 +6,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/todayWeatherItem"
         android:layout_width="110dp"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/card_icon_bg"
-        android:backgroundTint="#E8E7E7"
-        android:layout_marginStart="16dp">
+        android:backgroundTint="#E8E7E7">
 
         <TextView
             android:id="@+id/hourlyTime"
@@ -30,11 +30,11 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@string/current_weather_image"
+            android:src="@mipmap/ic_launcher"
             app:layout_constraintBottom_toTopOf="@+id/hourlyTemp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hourlyTime"
-            android:src="@mipmap/ic_launcher" />
+            app:layout_constraintTop_toBottomOf="@+id/hourlyTime" />
 
         <TextView
             android:id="@+id/hourlyTemp"
@@ -46,9 +46,9 @@
             android:textColor="#262626"
             android:textSize="14sp"
             android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
