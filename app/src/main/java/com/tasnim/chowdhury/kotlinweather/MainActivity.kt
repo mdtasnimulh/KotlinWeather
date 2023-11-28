@@ -10,14 +10,13 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -69,6 +68,22 @@ class MainActivity : AppCompatActivity() {
         binding.currentDateTime.text = getCurrentDate()
     }
 
+    private fun setProgressBarHumidity(humidity: Int){
+        val handler = Handler(Looper.getMainLooper())
+        binding.humidityProgress.max = 100
+        binding.humidityProgress.min = 0
+
+        // Simulate progress updates
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                if (humidity <= 100) {
+                    binding.humidityProgress.progress = humidity
+                    handler.postDelayed(this, 300)
+                }
+            }
+        }, 300)
+    }
+
     private fun getCurrentDate(): String{
         val dateFormat = SimpleDateFormat("MMMM dd, yyy", Locale.US)
         val currentDate = Date(System.currentTimeMillis())
@@ -103,6 +118,12 @@ class MainActivity : AppCompatActivity() {
                     binding.cloudTv.text = "${it.clouds}%"
                     binding.humidityTv.text = "${it.humidity}%"
                     binding.currentCondition.text = "${it.weather[0].description}"
+
+                    binding.humidityValue.text = "${it.humidity}%"
+                    setProgressBarHumidity(it.humidity)
+
+                    binding.feelsLikeTv.text = "Feels Like ${it.feelsLike}"
+                    binding.uvIndexTv.text = "UV Index ${it.uvi}"
 
                     for (i in it.weather){
                         if (i.icon == "01d"){

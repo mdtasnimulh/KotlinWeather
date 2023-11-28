@@ -272,6 +272,102 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/viewOne" />
 
+                <ProgressBar
+                    android:id="@+id/humidityProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="16dp"
+                    android:indeterminate="false"
+                    android:progressDrawable="@drawable/custom_progress"
+                    android:progressTint="@color/blue"
+                    android:secondaryProgressTint="@color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/comfortLevelTv"
+                    tools:max="100"
+                    tools:progress="61" />
+
+                <LinearLayout
+                    android:id="@+id/comfortProgressLl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="@+id/humidityProgress"
+                    app:layout_constraintBottom_toBottomOf="@+id/humidityProgress"
+                    app:layout_constraintStart_toStartOf="@+id/humidityProgress"
+                    app:layout_constraintEnd_toEndOf="@+id/humidityProgress">
+
+                    <TextView
+                        android:id="@+id/humidityValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="65%"
+                        android:textColor="#262626"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/comfortHumidityTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="Humidity"
+                        android:textColor="#262626"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bottomDataLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/humidityProgress"
+                    app:layout_constraintStart_toStartOf="@+id/humidityProgress"
+                    app:layout_constraintEnd_toEndOf="@+id/humidityProgress">
+
+                    <TextView
+                        android:id="@+id/feelsLikeTv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="Feels Like 28.53"
+                        android:paddingVertical="6dp"
+                        android:textColor="#262626"
+                        android:textSize="14sp"
+                        android:textStyle="normal"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/mediumBlack"/>
+
+                    <TextView
+                        android:id="@+id/uvIndexTv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="UV Index 0.0"
+                        android:paddingVertical="6dp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:textColor="#262626"
+                        android:textSize="14sp"
+                        android:textStyle="normal"/>
+
+                </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
