@@ -1,5 +1,6 @@
 package com.tasnim.chowdhury.kotlinweather.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,23 +33,30 @@ class WeatherViewModel(val repository: WeatherRepository) : ViewModel()  {
         unit: String?,
     ){
         viewModelScope.launch {
+            Log.d("chkNoValue", "1")
             _dataLoading.value = true
             try {
+                Log.d("chkNoValue", "2")
                 val response = repository.getWeatherData(
                     lat = lat,
                     lon = lon,
                     appId = appId,
                     unit = unit,
                 )
+                Log.d("chkNoValue", "3 ${response.body()}")
                 _dataLoading.value = false
                 if (response.isSuccessful){
+                    Log.d("chkNoValue", "4 ${response.body()}")
                     _currentWeatherData.value = response.body()?.current
                     _dailyWeatherData.value = response.body()?.daily
                     _hourlyWeatherData.value = response.body()?.hourly
                 }else {
+
+                    Log.d("chkNoValue", "5")
                     _dataLoading.value = false
                 }
             }catch (e: Exception){
+                Log.d("chkNoValue", "6 ${e.message}")
                 _dataLoading.value = false
             }
         }

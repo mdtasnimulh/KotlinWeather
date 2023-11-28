@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 class HourlyAdapter(): RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {
 
     private var weatherData: List<WeatherModel.Hourly> = listOf()
-    var selectedItemPosition = -1
+    var selectedItemPosition = 0
 
     inner class HourlyViewHolder(private val binding: TodayWeatherItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

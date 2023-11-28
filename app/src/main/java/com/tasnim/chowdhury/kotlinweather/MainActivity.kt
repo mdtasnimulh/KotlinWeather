@@ -57,11 +57,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        setupAdapter()
+        setUpDailyAdapter()
         getLocation()
 
         initData()
-        setupAdapter()
-        setUpDailyAdapter()
         setupObserver()
     }
 
