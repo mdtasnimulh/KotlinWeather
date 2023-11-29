@@ -85,6 +85,8 @@ dependencies {
     // LiveData
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
     // Glide
     /*implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation ("com.caverock:androidsvg-aar:1.4")
