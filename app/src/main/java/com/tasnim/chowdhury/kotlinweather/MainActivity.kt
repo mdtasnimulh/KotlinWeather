@@ -27,6 +27,7 @@ import com.tasnim.chowdhury.kotlinweather.adapter.HourlyAdapter
 import com.tasnim.chowdhury.kotlinweather.databinding.ActivityMainBinding
 import com.tasnim.chowdhury.kotlinweather.repository.WeatherRepository
 import com.tasnim.chowdhury.kotlinweather.utils.apiKey
+import com.tasnim.chowdhury.kotlinweather.utils.latLonCallback
 import com.tasnim.chowdhury.kotlinweather.utils.unit
 import com.tasnim.chowdhury.kotlinweather.viewModel.WeatherViewModel
 import com.tasnim.chowdhury.kotlinweather.viewModel.WeatherViewModelFactory
@@ -59,7 +60,11 @@ class MainActivity : AppCompatActivity() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setupAdapter()
         setUpDailyAdapter()
-        getLocation()
+        getLocation(object : latLonCallback {
+            override fun onLocationReceived(latitude: String, longitude: String) {
+                Log.d("chkGainLocation", "$latitude $longitude 1")
+            }
+        })
 
         initData()
         setupObserver()
@@ -187,7 +192,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getLocation() {
+    private fun getLocation(latLonCallback: latLonCallback) {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 if (ActivityCompat.checkSelfPermission(
@@ -210,6 +215,9 @@ class MainActivity : AppCompatActivity() {
                         Log.d("chkLocationD", "$list ---")
                         lat = list?.get(0)?.latitude.toString()
                         lon = list?.get(0)?.longitude.toString()
+
+                        latLonCallback.onLocationReceived(lat, lon)
+
                         weatherViewModel.getWeatherData(
                             lat = lat,
                             lon = lon,
@@ -265,7 +273,11 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == permissionId) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                getLocation()
+                getLocation(object : latLonCallback {
+                    override fun onLocationReceived(latitude: String, longitude: String) {
+                        Log.d("chkGainLocation", "$latitude $longitude 2")
+                    }
+                })
             }
         }
     }
